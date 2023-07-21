@@ -1,0 +1,59 @@
+使用枚举包裹三个不同的类型，并放入一个Vec中，对Vec进行遍历，调用三种不同类型的各自的方法：
+
+enum MyEnum {
+    Type1(Type1),
+    Type2(Type2),
+    Type3(Type3),
+}
+
+impl MyEnum {
+    fn call_method(&self) {
+        match self {
+            MyEnum::Type1(t) => t.method(),
+            MyEnum::Type2(t) => t.method(),
+            MyEnum::Type3(t) => t.method(),
+        }
+    }
+}
+
+fn main() {
+  let vec: Vec<MyEnum> = vec![MyEnum::Type1(Type1), MyEnum::Type2(Type2), MyEnum::Type3(Type3)];
+  for v in vec {
+      v.call_method();
+  }
+}
+
+定义三个不同的类型，使用Trait Object，将其放入一个Vec中，对Vec进行遍历，调用三种不同类型的各自的方法：
+
+trait MyTrait {
+    fn method(&self);
+}
+
+impl MyTrait for Type1 {
+    fn method(&self) {
+        // Type1's implementation
+    }
+}
+
+impl MyTrait for Type2 {
+    fn method(&self) {
+        // Type2's implementation
+    }
+}
+
+impl MyTrait for Type3 {
+    fn method(&self) {
+        // Type3's implementation
+    }
+}
+
+fn main() {
+  let vec: Vec<Box<dyn MyTrait>> = vec![Box::new(Type1), Box::new(Type2), Box::new(Type3)];
+  for v in vec {
+      v.method();
+  }
+}
+
+两种实现方法的区别主要在于：
+使用枚举的方式，所有可能的类型都需要在定义枚举时全部列出，这使得类型系统更加严格，但也限制了灵活性。如果需要添加新的类型，就需要修改枚举的定义和相关的代码。
+使用Trait Object的方式，可以更灵活地处理不同的类型。只要类型实现了指定的Trait，就可以被放入Vec中。这使得代码更加灵活，更容易扩展，但也可能会带来一些运行时的开销，因为方法调用可能需要通过虚函数表（vtable）进行。
