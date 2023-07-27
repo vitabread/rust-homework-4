@@ -1,5 +1,3 @@
-使用枚举包裹三个不同的类型，并放入一个Vec中，对Vec进行遍历，调用三种不同类型的各自的方法：
-
 enum MyEnum {
     Type1(Type1),
     Type2(Type2),
@@ -16,14 +14,26 @@ impl MyEnum {
     }
 }
 
-fn main() {
-  let vec: Vec<MyEnum> = vec![MyEnum::Type1(Type1), MyEnum::Type2(Type2), MyEnum::Type3(Type3)];
-  for v in vec {
-      v.call_method();
-  }
+struct Type1;
+impl Type1 {
+    fn method(&self) {
+        println!("Type1 method called");
+    }
 }
 
-定义三个不同的类型，使用Trait Object，将其放入一个Vec中，对Vec进行遍历，调用三种不同类型的各自的方法：
+struct Type2;
+impl Type2 {
+    fn method(&self) {
+        println!("Type2 method called");
+    }
+}
+
+struct Type3;
+impl Type3 {
+    fn method(&self) {
+        println!("Type3 method called");
+    }
+}
 
 trait MyTrait {
     fn method(&self);
@@ -32,27 +42,36 @@ trait MyTrait {
 impl MyTrait for Type1 {
     fn method(&self) {
         // Type1's implementation
+        println!("MyTrait Type1 method called");
     }
 }
 
 impl MyTrait for Type2 {
     fn method(&self) {
         // Type2's implementation
+        println!("MyTrait Type2 method called");
     }
 }
 
 impl MyTrait for Type3 {
     fn method(&self) {
         // Type3's implementation
+        println!("MyTrait Type3 method called");
     }
 }
 
 fn main() {
-  let vec: Vec<Box<dyn MyTrait>> = vec![Box::new(Type1), Box::new(Type2), Box::new(Type3)];
-  for v in vec {
-      v.method();
-  }
+    let vec: Vec<MyEnum> = vec![MyEnum::Type1(Type1), MyEnum::Type2(Type2), MyEnum::Type3(Type3)];
+    for v in vec {
+        v.call_method();
+    }
+
+    let vec2: Vec<Box<dyn MyTrait>> = vec![Box::new(Type1), Box::new(Type2), Box::new(Type3)];
+    for v in vec2 {
+        v.method();
+    }
 }
+
 
 两种实现方法的区别主要在于：
 使用枚举的方式，所有可能的类型都需要在定义枚举时全部列出，这使得类型系统更加严格，但也限制了灵活性。如果需要添加新的类型，就需要修改枚举的定义和相关的代码。
